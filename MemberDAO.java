@@ -8,14 +8,14 @@ import java.util.Scanner;
 
 public class MemberDAO {
 	// DAO : Database Access Object
-	// µ¥ÀÌÅÍ º£ÀÌ½º¿¡ Á¢±ÙÇÏ±â À§ÇÑ °´Ã¼¸¦ ¸¸µé ¼ö ÀÖ´Â Å¬·¡½º
+	// ë°ì´í„° ë² ì´ìŠ¤ì— ì ‘ê·¼í•˜ê¸° ìœ„í•œ ê°ì²´ë¥¼ ë§Œë“¤ ìˆ˜ ìˆëŠ” í´ë˜ìŠ¤
 	Scanner sc = new Scanner(System.in);
-	// ·¹ÆÛ·±½ºÇüÀº ±âº»°ªÀ» nullÀÌ µé¾î°¡¹Ç·Î ¼±¾ğ¸¸ ÇØÁàµµµÈ´Ù.
+	// ë ˆí¼ëŸ°ìŠ¤í˜•ì€ ê¸°ë³¸ê°’ì„ nullì´ ë“¤ì–´ê°€ë¯€ë¡œ ì„ ì–¸ë§Œ í•´ì¤˜ë„ëœë‹¤.
 	private Connection conn;
 	private PreparedStatement psmt;
 	private ResultSet rs;
 	
-	// µå¶óÀÌ¹ö ·Îµù°ú Ä¿³Ø¼Ç °´Ã¼¸¦ °¡Á®¿À´Â ¸Ş¼Òµå
+	// ë“œë¼ì´ë²„ ë¡œë”©ê³¼ ì»¤ë„¥ì…˜ ê°ì²´ë¥¼ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
 	private void getConnection() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -32,10 +32,10 @@ public class MemberDAO {
 		}
 	}
 
-	// DataBase¿Í ¿¬°áÀ» ²÷¾îÁÖ´Â ¸Ş¼Òµå
+	// DataBaseì™€ ì—°ê²°ì„ ëŠì–´ì£¼ëŠ” ë©”ì†Œë“œ
 	private void close() {
 		try {
-			if (rs != null) { // nullÃ³¸®¸¦ ÇßÀ¸¹Ç·Î ÇÔ²²½áµµµÊ
+			if (rs != null) { // nullì²˜ë¦¬ë¥¼ í–ˆìœ¼ë¯€ë¡œ í•¨ê»˜ì¨ë„ë¨
 				rs.close();
 			}
 			if (psmt != null) {
@@ -49,53 +49,53 @@ public class MemberDAO {
 		}
 	}
 
-	// ·Î±×ÀÎ ±â´É
+	// ë¡œê·¸ì¸ ê¸°ëŠ¥
 	public String login(String id, String pw) {
 
 		getConnection();
 		String nick = null;
 		try {
 			// * JDBC
-			// 0. JDBC¸¦ »ç¿ëÇÏ´Â ÇÁ·ÎÁ§Æ®¿¡ Driver ÆÄÀÏ ³Ö±â
-			// ÇÁ·ÎÁ§Æ® ¿À¸¥ÂÊ¸¶¿ì½º build path -> configure
+			// 0. JDBCë¥¼ ì‚¬ìš©í•˜ëŠ” í”„ë¡œì íŠ¸ì— Driver íŒŒì¼ ë„£ê¸°
+			// í”„ë¡œì íŠ¸ ì˜¤ë¥¸ìª½ë§ˆìš°ìŠ¤ build path -> configure
 
-			// 1. Driver ·Îµù ( Oracle Driver ) -> µ¿Àû·Îµù
-			// ³»°¡ »ç¿ëÇÏ´Â DBMSÀÇ µå¶óÀÌ¹ö ·Îµù
-			// ¿¹¿ÜÃ³¸® = try ~ catch
+			// 1. Driver ë¡œë”© ( Oracle Driver ) -> ë™ì ë¡œë”©
+			// ë‚´ê°€ ì‚¬ìš©í•˜ëŠ” DBMSì˜ ë“œë¼ì´ë²„ ë¡œë”©
+			// ì˜ˆì™¸ì²˜ë¦¬ = try ~ catch
 //			Class.forName("oracle.jdbc.driver.OracleDriver");
 
-			// 2. Connection ¿¬°á
-			// ConnectionÀ» ¿¬°áÇÏ±â À§ÇØ¼­´Â
-			// DB¿¡ Á¢¼Ó°¡´ÉÇÑ url, id, pw °¡ ÇÊ¿äÇÏ´Ù.
+			// 2. Connection ì—°ê²°
+			// Connectionì„ ì—°ê²°í•˜ê¸° ìœ„í•´ì„œëŠ”
+			// DBì— ì ‘ì†ê°€ëŠ¥í•œ url, id, pw ê°€ í•„ìš”í•˜ë‹¤.
 //			String db_url = "jdbc:oracle:thin:@localhost:1521:xe";
 //			String db_id = "hr";
 //			String db_pw = "hr";
 //			conn = DriverManager.getConnection(db_url, db_id, db_pw);
 
-			// 3. SQL¹® ÀÛ¼º ¹× ½ÇÇà
+			// 3. SQLë¬¸ ì‘ì„± ë° ì‹¤í–‰
 			String sql = "select * from bigmember where id = ? and pw = ?";
 
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, id);// Ã¹¹øÂ° ¹°À½Ç¥
+			psmt.setString(1, id);// ì²«ë²ˆì§¸ ë¬¼ìŒí‘œ
 			psmt.setString(2, pw);
 
-			rs = psmt.executeQuery(); // Ä¿¼­
-			if ( rs.next() ) { // rs ´ÙÀ½Ä­ÀÇ Á¸Àç¿©ºÎ
-				nick = rs.getString(3); // 3¹øÂ° ¿­ ¶Ç´Â ÄÃ·³¸í "nick"µµ °¡´É  
+			rs = psmt.executeQuery(); // ì»¤ì„œ
+			if ( rs.next() ) { // rs ë‹¤ìŒì¹¸ì˜ ì¡´ì¬ì—¬ë¶€
+				nick = rs.getString(3); // 3ë²ˆì§¸ ì—´ ë˜ëŠ” ì»¬ëŸ¼ëª… "nick"ë„ ê°€ëŠ¥  
 			}
 			
-//			if (rs.next()) { // Ä¿¼­¸¦ ³»¸±¼öÀÖ´ÂÁö ¹°¾îº¸°í µÈ´Ù¸é ³»¸®°í ³í¸®°ªÃâ·Â
-//				System.out.println("·Î±×ÀÎ ¼º°ø");
+//			if (rs.next()) { // ì»¤ì„œë¥¼ ë‚´ë¦´ìˆ˜ìˆëŠ”ì§€ ë¬¼ì–´ë³´ê³  ëœë‹¤ë©´ ë‚´ë¦¬ê³  ë…¼ë¦¬ê°’ì¶œë ¥
+//				System.out.println("ë¡œê·¸ì¸ ì„±ê³µ");
 //				// System.out.println(rs.getString("id"));
 //				// System.out.println(rs.getString("pw"));
-//				System.out.println(rs.getString("nick") + "´Ô È¯¿µÇÕ´Ï´Ù!");
+//				System.out.println(rs.getString("nick") + "ë‹˜ í™˜ì˜í•©ë‹ˆë‹¤!");
 //			} else {
-//				System.out.println("·Î±×ÀÎ ½ÇÆĞ");
+//				System.out.println("ë¡œê·¸ì¸ ì‹¤íŒ¨");
 //			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// 4. Java¿Í DataBase °£ÀÇ ¿¬°áÀ» ²÷¾îÁØ´Ù
+			// 4. Javaì™€ DataBase ê°„ì˜ ì—°ê²°ì„ ëŠì–´ì¤€ë‹¤
 //			try {
 //				if (rs != null) {
 //					rs.close();
@@ -114,7 +114,7 @@ public class MemberDAO {
 		return nick;
 	}
 
-	// È¸¿ø °¡ÀÔ ±â´É
+	// íšŒì› ê°€ì… ê¸°ëŠ¥
 	public int join(String id, String pw, String nick) {
 
 		getConnection();
@@ -125,11 +125,11 @@ public class MemberDAO {
 			String sql = "insert into bigmember values (?,?,?)";
 
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, id);// Ã¹¹øÂ° ¹°À½Ç¥
+			psmt.setString(1, id);// ì²«ë²ˆì§¸ ë¬¼ìŒí‘œ
 			psmt.setString(2, pw);
 			psmt.setString(3, nick);
 
-			cnt = psmt.executeUpdate(); // ½ÇÇàµÈ sql¼ö
+			cnt = psmt.executeUpdate(); // ì‹¤í–‰ëœ sqlìˆ˜
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,7 +139,7 @@ public class MemberDAO {
 		return cnt;
 	}
 
-	// È¸¿ø Á¤º¸ ¼öÁ¤ ±â´É
+	// íšŒì› ì •ë³´ ìˆ˜ì • ê¸°ëŠ¥
 	public int update(String id, String inputNick) {
 
 		getConnection();
@@ -150,13 +150,13 @@ public class MemberDAO {
 
 			psmt = conn.prepareStatement(sql);
 
-			psmt.setString(1, inputNick);// Ã¹¹øÂ° ¹°À½Ç¥
+			psmt.setString(1, inputNick);// ì²«ë²ˆì§¸ ë¬¼ìŒí‘œ
 			psmt.setString(2, id);
-			// update Å×ÀÌºí¸í set ÄÃ·³¸í = ¹Ù²Ù°í½ÍÀº°ª where Á¶°Ç
-			// executeQuery -> Å×ÀÌºí¿¡ µ¥ÀÌÅÍ°¡ º¯ÇÔ ¾øÀ»¶§, º¸±â¸¸ÇÒ¶§, ÁÖ·Î select¹®
-			// ResultSet ·Î ¹İÈ¯
-			// executeUpdate -> Å×ÀÌºíÀÇ ³»¿ëÀÌ º¯°æµÉ¶§
-			// int Å¸ÀÔÀ¸·Î ¹İÈ¯ -> ½ÇÇàµÈ sql¹®ÀÇ ¼ö
+			// update í…Œì´ë¸”ëª… set ì»¬ëŸ¼ëª… = ë°”ê¾¸ê³ ì‹¶ì€ê°’ where ì¡°ê±´
+			// executeQuery -> í…Œì´ë¸”ì— ë°ì´í„°ê°€ ë³€í•¨ ì—†ì„ë•Œ, ë³´ê¸°ë§Œí• ë•Œ, ì£¼ë¡œ selectë¬¸
+			// ResultSet ë¡œ ë°˜í™˜
+			// executeUpdate -> í…Œì´ë¸”ì˜ ë‚´ìš©ì´ ë³€ê²½ë ë•Œ
+			// int íƒ€ì…ìœ¼ë¡œ ë°˜í™˜ -> ì‹¤í–‰ëœ sqlë¬¸ì˜ ìˆ˜
 			cnt = psmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -166,7 +166,7 @@ public class MemberDAO {
 		}
 		return cnt;
 	}
-	// È¸¿ø Á¤º¸ Ãâ·Â
+	// íšŒì› ì •ë³´ ì¶œë ¥
 	public ArrayList<MemberDTO> selectAll() {
 		
 		ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();
@@ -189,7 +189,7 @@ public class MemberDAO {
 		} finally {
 			close();
 		}
-		
+		 
 		return list;
 		
 	}
